@@ -4,7 +4,7 @@ from aiogram import  types
 from .echo import created_at
 
 async def sent_admin_data_and_private_channel(datas, admin_id, channel_id, user_id, user_data):
-    photos = [datas['front_p'], datas['back_p'], datas['front_tex'], datas['back_tex'], datas['car'], datas['payment']]
+    photos = [datas['car'], datas['payment']]
     media_group = [InputMediaPhoto(media=file_id) for file_id in photos]
     check_data = db.get_last_check_by_user(telegram_id=user_id)
     admin_keyboard = InlineKeyboardMarkup(inline_keyboard=[
