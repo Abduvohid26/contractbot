@@ -65,54 +65,13 @@ async def get_phone(message: Message, state: FSMContext):
         phone_pattern = r'^\+998\d{9}$'
         if re.fullmatch(phone_pattern, message.text):
             await state.update_data(phone=message.text)
-            await message.answer("📸 Haydovchilik guvohnomasining old tomonini yuboring:")
-            await state.set_state(RegisterState.front_p)
+            await message.answer("📸 Mashinangiz old tomonidan rasm yuboring:")
+            await state.set_state(RegisterState.car)
         else:
             await message.answer("❌ Telefon raqamni to‘g‘ri formatda kiriting! (masalan: +998901234567)")
         return
     await message.answer("⚠️ Iltimos, Telfon raqamingizni kiriting: ")
 
-# --- Front P (Haydovchilik guvohnomasi oldi) ---
-@dp.message(StateFilter(RegisterState.front_p))
-async def get_front_p(message: Message, state: FSMContext):
-    if message.photo:
-        await state.update_data(front_p=message.photo[-1].file_id)
-        await message.answer("📸 Haydovchilik guvohnomasining orqa tomonini yuboring:")
-        await state.set_state(RegisterState.back_p)
-        return
-    await message.answer("⚠️ Iltimos, Haydovchilik guvohnomasining old tomon rasmini yuboring!")
-
-# --- Back P (Haydovchilik guvohnomasi orqasi) ---
-@dp.message(StateFilter(RegisterState.back_p))
-async def get_back_p(message: Message, state: FSMContext):
-    if message.photo:
-        await state.update_data(back_p=message.photo[-1].file_id)
-        await message.answer("📸 Tex pasportning old tomonini yuboring:")
-        await state.set_state(RegisterState.front_tex)
-        return
-    await message.answer("⚠️ Iltimos, Haydovchilik guvohnomasining orqa tomon rasmini yuboring!")
-
-
-# --- Front Tex (Tex pasport oldi) ---
-@dp.message(StateFilter(RegisterState.front_tex))
-async def get_front_tex(message: Message, state: FSMContext):
-    if message.photo:
-        await state.update_data(front_tex=message.photo[-1].file_id)
-        await message.answer("📸 Tex pasportning orqa tomonini yuboring:")
-        await state.set_state(RegisterState.back_tex)
-        return
-    await message.answer("⚠️ Iltimos, Tex pasportning old tomon rasmini yuboring!")
-
-
-# --- Back Tex (Tex pasport orqasi) ---
-@dp.message(StateFilter(RegisterState.back_tex))
-async def get_back_tex(message: Message, state: FSMContext):
-    if message.photo:
-        await state.update_data(back_tex=message.photo[-1].file_id)
-        await message.answer("🚗 Mashina rasmini yuboring:")
-        await state.set_state(RegisterState.car)
-        return
-    await message.answer("⚠️ Iltimos, Tex pasportning orqa tomon rasmini yuboring!")
 
 
 from aiogram.types.input_file import FSInputFile
@@ -121,7 +80,6 @@ from aiogram.types.input_file import FSInputFile
 async def get_car(message: Message, state: FSMContext):
     if message.photo:
         await state.update_data(car=message.photo[-1].file_id)
-        # To‘lov uchun karta rasmi
         payment_photo = FSInputFile(path='media/card.png')
         await message.answer_photo(payment_photo,
                                    caption="💳 Iltimos, ushbu kartaga to‘lov qiling va to‘lov chekini rasm sifatida yuboring.")
@@ -145,8 +103,6 @@ async def confirm_payment(message: Message, state: FSMContext):
             f"✅ Ro‘yxatdan o‘tish yakunlandi!\n\n"
             f"👤 Ism: {data['full_name']}\n"
             f"📞 Telefon: {data['phone']}\n"
-            f"📸 Haydovchilik guvohnomasi: ✅\n"
-            f"📸 Tex pasport: ✅\n"
             f"🚗 Mashina rasmi: ✅\n"
             f"💳 To‘lov: ✅\n\n"
             f"⌚️ To'lov tastiqlanishi bilan sizga linklar yuboriladi ⌚️"
