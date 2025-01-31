@@ -27,7 +27,10 @@ async def sent_admin_data_and_private_channel(datas, admin_id, channel_id, user_
 async def get_check(call: types.CallbackQuery):
     user_id = call.data.split('_')[-1]
     await call.answer(cache_time=60)
-    await bot.send_message(chat_id=int(user_id), text="✅ Sizning ro'yxatdan o'tish so'rovingiz tasdiqlandi! Linklar:\nhttps://google.com")
+    await bot.send_message(chat_id=int(user_id), text=f"✅ Sizning ro'yxatdan o'tish so'rovingiz tasdiqlandi! Linklar:\n"
+                                                      f" 📝 Mijozlar: https://t.me/+kM3kSKNxQVNjYzFi\n"
+                                                      f"📤 Elon Berish: https://t.me/FargonaBeshariqElonBot\n"
+                                                      f"🔒 Yopiq Guruh: https://t.me/+dkyxxV7rmHozYWI6")
     db.add_payment(telegram_id=user_id, created_at=created_at)
     await call.message.answer(text="✅ Foydalanuvchi tasdiqlandi")
 
